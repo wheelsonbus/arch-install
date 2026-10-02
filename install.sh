@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-BLOCK_DEVICE_PATH="/dev/sdb"
+BLOCK_DEVICE_PATH=""
 PARTITION_PREFIX=""
 CHROOT_SCRIPT="chroot.sh"
 
@@ -10,7 +10,6 @@ ping -q -c 1 archlinux.org > /dev/null || { echo "Failed to ping archlinux.org."
 
 timedatectl set-ntp true
 
-umount "${BLOCK_DEVICE_PATH}?*"
 parted --script --align optimal "${BLOCK_DEVICE_PATH}" \
     mklabel gpt \
     mkpart esp fat32 0% 1GiB \
@@ -29,5 +28,4 @@ genfstab -U /mnt >> /mnt/etc/fstab
 cp "${CHROOT_SCRIPT}" /mnt/tmp
 arch-chroot /mnt "/tmp/${CHROOT_SCRIPT}"
 
-umount /mnt/boot 
-umount /mnt
+umount -R /mnt
