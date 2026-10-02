@@ -1,12 +1,12 @@
 #!/bin/bash
 set -euo pipefail
 
-LOCALTIME_PATH="/usr/share/zoneinfo/Canada/Pacific"
+LOCALTIME_PATH="/usr/share/zoneinfo/US/Eastern"
 LOCALE="en_US.UTF-8"
 HOSTNAME="arch"
 ROOT_PASSWORD="root"
-USER_NAME="wheels"
-USER_PASSWORD="wheels"
+USER_NAME="user"
+USER_PASSWORD="user"
 
 ln -sf "${LOCALTIME_PATH}" /etc/localtime
 hwclock --systohc
@@ -27,4 +27,4 @@ systemctl enable NetworkManager.service
 sed --in-place "/%wheel ALL=(ALL:ALL) ALL/s/^# //g" /etc/sudoers
 
 useradd --create-home --groups wheel "${USER_NAME}"
-printf "${USER_PASSWORD}\n${USER_PASSWORD}\n" | passwd
+printf "${USER_PASSWORD}\n${USER_PASSWORD}\n" | passwd "${USER_NAME}"
